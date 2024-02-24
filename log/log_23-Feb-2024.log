@@ -1,0 +1,18 @@
+24-02-23 15:33:12 - Error al insertar datos usuario 5 
+PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'tipo_usuario' in 'field list' in C:\xampp\htdocs\apirentcar\usuario\usuario.php:111
+Stack trace:
+#0 C:\xampp\htdocs\apirentcar\usuario\usuario.php(111): PDOStatement->execute()
+#1 C:\xampp\htdocs\apirentcar\usuario\agregar.php(42): usuario->create()
+#2 {main}
+24-02-23 15:33:53 - Error al insertar datos usuario 5 
+PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'tipo_usuario' in 'field list' in C:\xampp\htdocs\apirentcar\usuario\usuario.php:111
+Stack trace:
+#0 C:\xampp\htdocs\apirentcar\usuario\usuario.php(111): PDOStatement->execute()
+#1 C:\xampp\htdocs\apirentcar\usuario\agregar.php(42): usuario->create()
+#2 {main}
+24-02-23 15:55:52 - Error al insertar datos usuario 5 
+PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'id_usuario' in 'where clause' in C:\xampp\htdocs\apirentcar\usuario\usuario.php:178
+Stack trace:
+#0 C:\xampp\htdocs\apirentcar\usuario\usuario.php(178): PDOStatement->execute()
+#1 C:\xampp\htdocs\apirentcar\usuario\editar.php(44): usuario->update()
+#2 {main}

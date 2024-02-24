@@ -34,7 +34,7 @@
        $datos->estado = $data->estado;
        $datos->tipo_usuario = $data->tipo_usuario;
     
-       $datos->codigousuario = $data->usuario_registro;
+      // $datos->codigousuario = $data->usuario_registro;
      
         // update datos will be here
         
