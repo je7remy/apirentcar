@@ -20,6 +20,7 @@ if ($jwt) {
     // Si el JWT es válido, insertar detalles de la factura
     try {
         // Establecer los valores de las propiedades de datos
+        
         $detalleFactura->idfactura = $data->idfactura;
         $detalleFactura->idvehiculo = $data->idvehiculo;
         $detalleFactura->monto = $data->monto;

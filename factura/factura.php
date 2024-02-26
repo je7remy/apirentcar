@@ -1,88 +1,103 @@
 <?php
-include_once '../config/core.php';
-include_once 'factura.php'; // Se incluye el archivo de la clase Factura
+class Factura {
+        
+    // Conexión a la base de datos y nombre de la tabla
+    private $conn;
+    private $table_name = "factura";
+    
+    // Propiedades de la factura
+    public $idfactura;
+    public $fecha;
+    public $idcliente;
+    public $monto;
+    public $descuento;
+    public $idusuario;
+    
+    // Constructor
+    public function __construct($db) {
+        $this->conn = $db;
+    }
+    
+    // Obtener todas las facturas
+    function getAll() {
+        $sqlQuery = "SELECT * FROM " . $this->table_name;
+        $stmt = $this->conn->prepare($sqlQuery);
+        $stmt->execute();
+        return $stmt;
+    }
 
-// Obtener conexión a la base de datos
-$database = new Database();
-$db = $database->getConnection();
-use \Firebase\JWT\JWT;
+    // Obtener una factura por su ID
+    function getOne() {
+        $sqlQuery = "SELECT * FROM " . $this->table_name . " WHERE idfactura = ?";
+        $stmt = $this->conn->prepare($sqlQuery);
+        $stmt->bindParam(1, $this->idfactura);
+        $stmt->execute();
+        return $stmt;
+    }
+    
+    // Crear una nueva factura
+    function create() {
+        $query = "INSERT INTO " . $this->table_name . " (fecha, idcliente, monto, descuento, idusuario) VALUES (:fecha, :idcliente, :monto, :descuento, :idusuario)";
+        $stmt = $this->conn->prepare($query);
 
-// Instanciar objeto factura (en lugar de gasto)
-$factura = new Factura($db); // Se instancia la clase Factura
+        $this->fecha = htmlspecialchars(strip_tags($this->fecha));
+        $this->idcliente = htmlspecialchars(strip_tags($this->idcliente));
+        $this->monto = htmlspecialchars(strip_tags($this->monto));
+        $this->descuento = htmlspecialchars(strip_tags($this->descuento));
+        $this->idusuario = htmlspecialchars(strip_tags($this->idusuario));
 
-// Obtener datos enviados
-$data = json_decode(file_get_contents("php://input"));
+        $stmt->bindParam(':fecha', $this->fecha);
+        $stmt->bindParam(':idcliente', $this->idcliente);
+        $stmt->bindParam(':monto', $this->monto);
+        $stmt->bindParam(':descuento', $this->descuento);
+        $stmt->bindParam(':idusuario', $this->idusuario);
 
-// Obtener JWT
-$jwt = isset($data->jwt) ? $data->jwt : "";
-
-// Si el JWT no está vacío
-if ($jwt) {
-    // Si la decodificación es exitosa, mostrar detalles de la factura
-    try {
-        // Establecer los valores de las propiedades de datos
-        $factura->idfactura = $data->idfactura;
-        $factura->fecha = $data->fecha;
-        $factura->idcliente = $data->idcliente;
-        $factura->monto = $data->monto;
-        $factura->descuento = $data->descuento;
-        $factura->idusuario = $data->idusuario;
-
-        // Actualizar la factura
-        $success = $factura->update();
-
-        // Si se actualizó correctamente
-        if ($success) {
-            // Establecer código de respuesta
-            http_response_code(200);
-
-            $json = array(
-                "status"    => "true",
-                "errcode"   => "01",
-                "msg"       => "Datos procesados correctamente"
-            );
-
-            // Respuesta en formato JSON
-            echo json_encode($json);
-        } else {
-            // Establecer código de respuesta
-            http_response_code(200);
-
-            // Mostrar mensaje de error
-            $json = array(
-                "status"    => "true",
-                "errCode"   => "00",
-                "msg"       => "Error al actualizar datos de la factura"
-            );
-            echo json_encode($json);
+        if($stmt->execute()) {
+            return true;
         }
+        return false;
+    } 
+
+    // Actualizar una factura
+    public function update() {
+        $query = "UPDATE " . $this->table_name . " SET fecha = :fecha, idcliente = :idcliente, monto = :monto, descuento = :descuento, idusuario = :idusuario WHERE idfactura = :idfactura";
+        $stmt = $this->conn->prepare($query);
+
+        $this->idfactura = htmlspecialchars(strip_tags($this->idfactura));
+        $this->fecha = htmlspecialchars(strip_tags($this->fecha));
+        $this->idcliente = htmlspecialchars(strip_tags($this->idcliente));
+        $this->monto = htmlspecialchars(strip_tags($this->monto));
+        $this->descuento = htmlspecialchars(strip_tags($this->descuento));
+        $this->idusuario = htmlspecialchars(strip_tags($this->idusuario));
+
+        $stmt->bindParam(':idfactura', $this->idfactura);
+        $stmt->bindParam(':fecha', $this->fecha);
+        $stmt->bindParam(':idcliente', $this->idcliente);
+        $stmt->bindParam(':monto', $this->monto);
+        $stmt->bindParam(':descuento', $this->descuento);
+        $stmt->bindParam(':idusuario', $this->idusuario);
+
+        if($stmt->execute()) {
+            return true;
+        }
+        return false;
     }
-    // Si la decodificación falla, significa que el JWT no es válido
-    catch (Exception $e) {
-        // Establecer código de respuesta
-        http_response_code(200);
 
-        $json = array(
-            "status"    => "true",
-            "errCode"   => "00",
-            "msg"       => "Acceso denegado"
-        );
+    // Actualizar el monto de una factura
+    public function updateMonto() {
+        $query = "UPDATE " . $this->table_name . " SET monto = :monto WHERE idfactura = :idfactura";
+        $stmt = $this->conn->prepare($query);
 
-        echo json_encode($json);
+        $this->idfactura = htmlspecialchars(strip_tags($this->idfactura));
+        $this->monto = htmlspecialchars(strip_tags($this->monto));
+
+        $stmt->bindParam(':monto', $this->monto);
+        $stmt->bindParam(':idfactura', $this->idfactura);
+
+        if($stmt->execute()) {
+            return true;
+        }
+        return false;
     }
-}
-// Mostrar mensaje de error si el JWT está vacío
-else {
-    // Establecer código de respuesta
-    http_response_code(200);
-
-    // Indicar que el acceso está denegado
-    $json = array(
-        "status"    => "true",
-        "errCode"   => "05",
-        "msg"       => "Acceso denegado"
-    );
-
-    echo json_encode($json);
 }
 ?>

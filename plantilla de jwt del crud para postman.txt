@@ -1,0 +1,48 @@
+http://localhost/apirentcar/reservacion/listall.php
+{
+    "jwt":"1"
+}
+
+http://localhost/apirentcar/reservacion/listone.php
+{
+    "jwt":"1",
+    "idreservacion":"1"
+}
+
+http://localhost/apirentcar/reservacion/estado.php
+{
+    "jwt":"1",
+    "idreservacion":"1",
+    "estado":"A"
+}
+
+http://localhost/apirentcar/reservacion/agregar.php
+{
+    "jwt":"1",
+    "descripcion":"m",
+    "estado":"A",
+    "fechainicio":"0000-00-00",
+    "fechafin":"0000-00-00",
+    "idcliente":"1",
+    "idvehiculo":"1",
+    "monto":"10",
+    "descuento":"10",
+    "idusuario":"1",
+    "fecharegistro":"0000-00-00"
+}
+
+http://localhost/apirentcar/reservacion/editar.php
+{
+    "jwt":"1",
+    "idreservacion":"1",
+    "descripcion":"maaaaaaaaaaaaaaaaaaaa",
+    "estado":"A",
+    "fechainicio":"0000-00-00",
+    "fechafin":"0000-00-00",
+    "idcliente":"1",
+    "idvehiculo":"1",
+    "monto":"10",
+    "descuento":"10",
+    "idusuario":"1",
+    "fecharegistro":"0000-00-00"
+}

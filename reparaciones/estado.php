@@ -1,14 +1,14 @@
 <?php
 
 include_once '../config/core.php';
-include_once 'reparaciones.php';
+include_once 'reparacion.php';
 
 // Obtener conexión a la base de datos
 $database = new Database();
 $db = $database->getConnection();
 
 // Instanciar el objeto reparaciones
-$reparaciones = new Reparaciones($db);
+$reparaciones = new Reparacion($db);
 
 // Obtener los datos enviados
 $data = json_decode(file_get_contents("php://input"));

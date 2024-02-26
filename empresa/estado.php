@@ -24,8 +24,8 @@ if ($jwt) {
         $empresa->idempresa = $data->idempresa;
         $empresa->estado = $data->estado;
 
-        // Actualizar el estado de la empresa
-        $success = $empresa->updateEstado();
+        // Actualizar el estado de la empresa usando el método update() en lugar de updateEstado()
+        $success = $empresa->update();
 
         // Si se actualizó correctamente
         if ($success) {

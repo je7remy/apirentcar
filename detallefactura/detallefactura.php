@@ -1,87 +1,96 @@
 <?php
-include_once '../config/core.php';
-include_once 'detallefactura.php'; // Se incluye el archivo de la clase DetalleFactura
-use \Firebase\JWT\JWT;
+class DetalleFactura {
+        
+    // Conexión a la base de datos y nombre de la tabla
+    private $conn;
+    private $detalle_table_name = "detallefactura";
+    
+    // Propiedades del detalle de factura
+    public $idfacturadetalle;
+    public $idfactura;
+    public $idvehiculo;
+    public $monto;
+    public $descuento;
+    
+    // Constructor
+    public function __construct($db) {
+        $this->conn = $db;
+    }
+    
+    // Obtener todos los detalles de factura
+    function getAll() {
+        $sqlQuery = "SELECT * FROM " . $this->detalle_table_name;
+        $stmt = $this->conn->prepare($sqlQuery);
+        $stmt->execute();
+        return $stmt;
+    }
 
-// Obtener conexión a la base de datos
-$database = new Database();
-$db = $database->getConnection();
+    // Obtener un detalle de factura por su ID
+    function getOne() {
+        $sqlQuery = "SELECT * FROM " . $this->detalle_table_name . " WHERE idfacturadetalle = ?";
+        $stmt = $this->conn->prepare($sqlQuery);
+        $stmt->bindParam(1, $this->idfacturadetalle);
+        $stmt->execute();
+        return $stmt;
+    }
+    
+    // Crear un nuevo detalle de factura
+    function create() {
+        $query = "INSERT INTO " . $this->detalle_table_name . " (idfactura, idvehiculo, monto, descuento) VALUES (:idfactura, :idvehiculo, :monto, :descuento)";
+        $stmt = $this->conn->prepare($query);
 
-// Instanciar objeto detallefactura
-$detalleFactura = new DetalleFactura($db); // Se instancia la clase DetalleFactura
+        $this->idfactura = htmlspecialchars(strip_tags($this->idfactura));
+        $this->idvehiculo = htmlspecialchars(strip_tags($this->idvehiculo));
+        $this->monto = htmlspecialchars(strip_tags($this->monto));
+        $this->descuento = htmlspecialchars(strip_tags($this->descuento));
 
-// Obtener datos enviados
-$data = json_decode(file_get_contents("php://input"));
+        $stmt->bindParam(':idfactura', $this->idfactura);
+        $stmt->bindParam(':idvehiculo', $this->idvehiculo);
+        $stmt->bindParam(':monto', $this->monto);
+        $stmt->bindParam(':descuento', $this->descuento);
 
-// Obtener JWT
-$jwt = isset($data->jwt) ? $data->jwt : "";
-
-// Si el JWT no está vacío
-if ($jwt) {
-    // Si la decodificación es exitosa, mostrar detalles del detalle de factura
-    try {
-        // Establecer los valores de las propiedades de datos
-        $detalleFactura->idfacturadetalle = $data->idfacturadetalle;
-        $detalleFactura->idfactura = $data->idfactura;
-        $detalleFactura->idvehiculo = $data->idvehiculo;
-        $detalleFactura->monto = $data->monto;
-        $detalleFactura->descuento = $data->descuento;
-
-        // Actualizar los datos del detalle de factura
-        $success = $detalleFactura->update();
-
-        // Si se actualizó correctamente
-        if ($success) {
-            // Establecer código de respuesta
-            http_response_code(200);
-
-            $json = array(
-                "status"    => "true",
-                "errcode"   => "01",
-                "msg"       => "Datos procesados correctamente"
-            );
-
-            // Respuesta en formato JSON
-            echo json_encode($json);
-        } else {
-            // Establecer código de respuesta
-            http_response_code(200);
-
-            // Mostrar mensaje de error
-            $json = array(
-                "status"    => "true",
-                "errCode"   => "00",
-                "msg"       => "Error al actualizar datos del detalle de factura"
-            );
-            echo json_encode($json);
+        if($stmt->execute()) {
+            return true;
         }
+        return false;
+    } 
+
+    // Actualizar un detalle de factura
+    public function update() {
+        $query = "UPDATE " . $this->detalle_table_name . " SET idfactura = :idfactura, idvehiculo = :idvehiculo, monto = :monto, descuento = :descuento WHERE idfacturadetalle = :idfacturadetalle";
+        $stmt = $this->conn->prepare($query);
+
+        $this->idfacturadetalle = htmlspecialchars(strip_tags($this->idfacturadetalle));
+        $this->idfactura = htmlspecialchars(strip_tags($this->idfactura));
+        $this->idvehiculo = htmlspecialchars(strip_tags($this->idvehiculo));
+        $this->monto = htmlspecialchars(strip_tags($this->monto));
+        $this->descuento = htmlspecialchars(strip_tags($this->descuento));
+
+        $stmt->bindParam(':idfacturadetalle', $this->idfacturadetalle);
+        $stmt->bindParam(':idfactura', $this->idfactura);
+        $stmt->bindParam(':idvehiculo', $this->idvehiculo);
+        $stmt->bindParam(':monto', $this->monto);
+        $stmt->bindParam(':descuento', $this->descuento);
+
+        if($stmt->execute()) {
+            return true;
+        }
+        return false;
     }
-    // Si la decodificación falla, significa que el JWT no es válido
-    catch (Exception $e) {
-        // Establecer código de respuesta
-        http_response_code(200);
 
-        $json = array(
-            "status"    => "true",
-            "errCode"   => "00",
-            "msg"       => "Acceso denegado"
-        );
+    // Eliminar un detalle de factura
+    public function delete() {
+        $query = "DELETE FROM " . $this->detalle_table_name . " WHERE idfacturadetalle = ?";
+        $stmt = $this->conn->prepare($query);
 
-        echo json_encode($json);
+        $this->idfacturadetalle = htmlspecialchars(strip_tags($this->idfacturadetalle));
+
+        $stmt->bindParam(1, $this->idfacturadetalle);
+
+        if($stmt->execute()) {
+            return true;
+        }
+        return false;
     }
-}
-// Mostrar mensaje de error si el JWT está vacío
-else {
-    // Establecer código de respuesta
-    http_response_code(200);
-
-    // Indicar que el acceso está denegado
-    $json = array(
-        "status"    => "true",
-        "errCode"   => "05",
-        "msg"       => "Acceso denegado"
-    );
-
-    echo json_encode($json);
 }
 ?>

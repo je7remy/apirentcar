@@ -1,14 +1,14 @@
 <?php
 
 include_once '../config/core.php';
-include_once 'gastos.php';
+include_once 'gasto.php';
 
 // Obtener conexión a la base de datos
 $database = new Database();
 $db = $database->getConnection();
 
 // Instanciar el objeto gastos
-$gastos = new Gastos($db);
+$gastos = new Gasto($db);
 
 // Obtener los datos enviados
 $data = json_decode(file_get_contents("php://input"));
