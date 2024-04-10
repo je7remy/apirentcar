@@ -1,14 +1,14 @@
 <?php
 include_once '../config/core.php';
-include_once 'gasto.php'; // Se incluye el archivo de la clase Gasto
+include_once 'cliente.php'; // Se incluye el archivo de la clase Cliente
+use \Firebase\JWT\JWT;
 
 // Obtener conexión a la base de datos
 $database = new Database();
 $db = $database->getConnection();
-use \Firebase\JWT\JWT;
 
-// Instanciar objeto gasto (en lugar de ingreso)
-$gasto = new Gasto($db); // Se instancia la clase Gasto
+// Instanciar objeto Cliente
+$cliente = new Cliente($db); // Se instancia la clase Cliente
 
 // Obtener datos enviados
 $data = json_decode(file_get_contents("php://input"));
@@ -18,20 +18,28 @@ $jwt = isset($data->jwt) ? $data->jwt : "";
 
 // Si el JWT no está vacío
 if ($jwt) {
-    // Si la decodificación es exitosa, mostrar detalles del gasto
+    // Si la decodificación es exitosa, insertar detalles del cliente
     try {
-        // Establecer los valores de las propiedades del gasto
-        $gasto->idgastos = $data->idgastos;
-        $gasto->descripcion = $data->descripcion;
-        $gasto->monto = $data->monto;
-        $gasto->estado = $data->estado;
-        $gasto->idusuario = $data->idusuario;
-        $gasto->fecha = $data->fecha;
+        // Establecer los valores de las propiedades de datos
+        $cliente->nombre = $data->nombre;
+        $cliente->apellido = $data->apellido;
+        $cliente->sexo = $data->sexo;
+        $cliente->whatsapp = $data->whatsapp;
+        $cliente->correo = $data->correo;
+        $cliente->telefonol = $data->telefonol;
+        $cliente->telefono2 = $data->telefono2;
+        $cliente->estado = $data->estado;
+        $cliente->tipo_identificacion = $data->tipo_identificacion;
+        $cliente->numero_identificacion = $data->numero_identificacion;
+        $cliente->usuario_registro = $data->usuario_registro;
+        $cliente->fecha_registro = $data->fecha_registro;
+        $cliente->usuario_modificado = $data->usuario_modificado;
+        $cliente->fecha_modificado = $data->fecha_modificado;
 
-        // Actualizar el gasto
-        $success = $gasto->update();
+        // Insertar datos del cliente
+        $success = $cliente->create(); // Se llama al método create() de la clase Cliente
 
-        // Si se actualizó correctamente
+        // Si se insertaron correctamente
         if ($success) {
             // Establecer código de respuesta
             http_response_code(200);
@@ -52,7 +60,7 @@ if ($jwt) {
             $json = array(
                 "status"    => "true",
                 "errCode"   => "00",
-                "msg"       => "Error al actualizar datos del gasto"
+                "msg"       => "Error al insertar detalles del cliente"
             );
             echo json_encode($json);
         }
@@ -64,7 +72,7 @@ if ($jwt) {
 
         $json = array(
             "status"    => "true",
-            "errCode"   => "00",
+            "errCode"   => "05",
             "msg"       => "Acceso denegado"
         );
 
@@ -79,7 +87,7 @@ else {
     // Indicar que el acceso está denegado
     $json = array(
         "status"    => "true",
-        "errCode"   => "05",
+        "errCode"   => "00",
         "msg"       => "Acceso denegado"
     );
 

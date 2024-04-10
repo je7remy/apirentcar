@@ -1,41 +1,42 @@
 <?php
-
 include_once '../config/core.php';
-include_once 'factura.php';
+include_once 'cliente.php'; // Se incluye el archivo de la clase Cliente
 
 // Obtener conexión a la base de datos
 $database = new Database();
 $db = $database->getConnection();
 
-// Instanciar el objeto factura
-$factura = new Factura($db);
+// Instanciar objeto cliente
+$cliente = new Cliente($db); // Se instancia la clase Cliente
 
 // Obtener los datos enviados
 $data = json_decode(file_get_contents("php://input"));
 
-// Obtener el JWT
+// Obtener JWT
 $jwt = isset($data->jwt) ? $data->jwt : "";
 
-// Si el JWT no está vacío
-if ($jwt) {
-    // Si el JWT es válido, actualizar el estado de la factura
+// Si el JWT no está vacío y el id_cliente está presente
+if ($jwt && isset($data->id_cliente)) {
+    // Si el JWT es válido, mostrar detalles del cliente
     try {
-        // Establecer los valores de propiedad de la factura
-        $factura->idfactura = $data->idfactura;
-        $factura->estado = $data->estado;
+        // Establecer el ID del cliente
+        $cliente->id_cliente = $data->id_cliente;
 
-        // Actualizar el estado de la factura
-        $success = $factura->updateEstado();
+        // Obtener los datos del cliente
+        $stmt = $cliente->getOne();
+        $itemCount = $stmt->rowCount();
 
-        // Si se actualizó correctamente
-        if ($success) {
+        // Si se encontraron datos
+        if ($itemCount > 0) {
+            $datos = $stmt->fetch(PDO::FETCH_ASSOC);
             // Establecer el código de respuesta
             http_response_code(200);
 
             $json = array(
                 "status"    => "true",
                 "errcode"   => "01",
-                "msg"       => "Estado de la factura actualizado correctamente"
+                "msg"       => "Datos procesados",
+                "data"      => $datos
             );
 
             // Respuesta en formato JSON
@@ -48,9 +49,10 @@ if ($jwt) {
             $json = array(
                 "status"    => "true",
                 "errCode"   => "00",
-                "msg"       => "Error al actualizar el estado de la factura"
+                "msg"       => "No existen datos"
             );
-            echo json_encode($json);
+
+            echo json_encode($json);	
         }
     } catch (Exception $e) {
         // Establecer el código de respuesta
@@ -72,7 +74,7 @@ if ($jwt) {
     $json = array(
         "status"    => "true",
         "errCode"   => "00",
-        "msg"       => "Acceso denegado"
+        "msg"       => "Acceso denegado o falta el ID del cliente"
     );
 
     echo json_encode($json);
