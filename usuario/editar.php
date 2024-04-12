@@ -25,7 +25,7 @@
         try {
      
          
-     
+     //$decoded = JWT::decode($jwt, $key, array('HS256'));
             // set datos property values
       
        $datos->id_usuario = $data->id_usuario;

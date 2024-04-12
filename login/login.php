@@ -26,14 +26,16 @@ if($usuario_exists){
     if ($user->clave ==  $password ) {
         // set response code
         http_response_code(200);
-     
+        
+    // $jwt = JWT::encode($token, $key);
+//        $jwt,
         echo json_encode(
             array(
                 "status" => true,
                 "jwt" => "1",
-                "idusuario" => $user->idusuario,
+                "id_usuario" => $user->id_usuario,
                 "nombre" => $user->nombre,
-                "tipo" => $user->tipo
+                "tipo_usuario" => $user->tipo_usuario
             )
         );
     } else {

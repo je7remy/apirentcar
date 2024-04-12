@@ -24,7 +24,7 @@
         // if decode succeed, show datos details
         try {
      
-          
+         // $decoded = JWT::decode($jwt, $key, array('HS256'));
      
             // set datos property values
        
