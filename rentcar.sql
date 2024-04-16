@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-04-2024 a las 02:56:18
+-- Tiempo de generación: 24-02-2024 a las 23:27:38
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -24,39 +24,6 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `clientes`
---
-
-CREATE TABLE `clientes` (
-  `id_cliente` int(11) NOT NULL,
-  `nombre` varchar(50) NOT NULL,
-  `apellido` varchar(50) NOT NULL,
-  `sexo` enum('M','F') NOT NULL,
-  `whatsapp` varchar(20) DEFAULT NULL,
-  `correo` varchar(100) NOT NULL,
-  `telefonol` varchar(20) DEFAULT NULL,
-  `telefono2` varchar(20) DEFAULT NULL,
-  `estado` enum('activo','inactivo') NOT NULL,
-  `tipo_identificacion` varchar(50) NOT NULL,
-  `numero_identificacion` varchar(20) NOT NULL,
-  `usuario_registro` varchar(50) NOT NULL,
-  `fecha_registro` datetime NOT NULL,
-  `usuario_modificado` varchar(50) DEFAULT NULL,
-  `fecha_modificado` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `clientes`
---
-
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `apellido`, `sexo`, `whatsapp`, `correo`, `telefonol`, `telefono2`, `estado`, `tipo_identificacion`, `numero_identificacion`, `usuario_registro`, `fecha_registro`, `usuario_modificado`, `fecha_modificado`) VALUES
-(1, 'Juan', 'Pérez', 'M', '5551234567', 'juanperez@example.com', '5558889999', '5557776666', 'inactivo', 'CC', '1234567890', 'usuario_ejemplo', '2024-04-10 10:10:35', NULL, NULL),
-(2, 'María', 'Gómez', 'F', '5552345678', 'mariagomez@example.com', '5559998888', '5556665555', 'activo', 'TI', '9876543210', 'usuario_ejemplo', '2024-04-10 10:10:35', NULL, NULL),
-(3, 'Ga', 'Apellido', 'M', '1234567890', 'correo@example.com', '9876543210', '5678901234', 'activo', 'DNI', '12345678', 'usuario_admin', '2024-04-04 10:00:00', 'usuario_admin', '2024-04-10 00:00:00');
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `detallefactura`
 --
 
@@ -67,14 +34,6 @@ CREATE TABLE `detallefactura` (
   `monto` decimal(10,2) DEFAULT NULL,
   `descuento` decimal(5,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `detallefactura`
---
-
-INSERT INTO `detallefactura` (`idfacturadetalle`, `idfactura`, `idvehiculo`, `monto`, `descuento`) VALUES
-(1, 1, 1, 1000.00, 999.99),
-(2, 2, 2, 10000.00, 999.99);
 
 -- --------------------------------------------------------
 
@@ -88,14 +47,6 @@ CREATE TABLE `empresa` (
   `estado` varchar(50) DEFAULT NULL,
   `idusuario` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `empresa`
---
-
-INSERT INTO `empresa` (`idempresa`, `nombre`, `estado`, `idusuario`) VALUES
-(1, '', 'A', 0),
-(2, 'm', 'A', 1);
 
 -- --------------------------------------------------------
 
@@ -198,8 +149,7 @@ CREATE TABLE `sucursal` (
 
 INSERT INTO `sucursal` (`idsucursal`, `nombre`, `estado`, `idempresa`, `idusuario`) VALUES
 (1, 'Gabrielll', 'I', 1, 1),
-(2, 'Gabriel', 'A', 1, 1),
-(3, 'Gabriel', 'A', 1, 1);
+(2, 'Gabriel', 'A', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -208,24 +158,22 @@ INSERT INTO `sucursal` (`idsucursal`, `nombre`, `estado`, `idempresa`, `idusuari
 --
 
 CREATE TABLE `usuario` (
-  `id_usuario` int(11) NOT NULL,
+  `idusuario` int(11) NOT NULL,
   `nombre` varchar(255) DEFAULT NULL,
   `usuario` varchar(100) DEFAULT NULL,
   `clave` varchar(255) DEFAULT NULL,
   `estado` varchar(50) DEFAULT NULL,
-  `tipo_usuario` varchar(50) DEFAULT NULL
+  `tipo` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`id_usuario`, `nombre`, `usuario`, `clave`, `estado`, `tipo_usuario`) VALUES
+INSERT INTO `usuario` (`idusuario`, `nombre`, `usuario`, `clave`, `estado`, `tipo`) VALUES
 (1, 'jeremy', 'jeremy', '1234', 'A', 'ADM'),
-(2, 'inmortus', 'inmortus', '1234', 'A', 'USR'),
-(3, 'ramatut', 'ramatut', '1234', 'A', 'ADM'),
-(4, 'Gabriel', 'Gabriel', '1234', 'A', 'ADM'),
-(5, 'prueba', 'prueba', '1234', 'A', 'ADM');
+(2, 'inmortus', 'inmortus', '1234', 'A', 'ADM'),
+(3, 'ramatut', 'ramatut', '1234', 'A', 'ADM');
 
 -- --------------------------------------------------------
 
@@ -262,12 +210,6 @@ INSERT INTO `vehiculos` (`idvehiculo`, `marca`, `nombre`, `descripcion`, `estado
 --
 -- Índices para tablas volcadas
 --
-
---
--- Indices de la tabla `clientes`
---
-ALTER TABLE `clientes`
-  ADD PRIMARY KEY (`id_cliente`);
 
 --
 -- Indices de la tabla `detallefactura`
@@ -321,7 +263,7 @@ ALTER TABLE `sucursal`
 -- Indices de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  ADD PRIMARY KEY (`id_usuario`);
+  ADD PRIMARY KEY (`idusuario`);
 
 --
 -- Indices de la tabla `vehiculos`
@@ -334,22 +276,16 @@ ALTER TABLE `vehiculos`
 --
 
 --
--- AUTO_INCREMENT de la tabla `clientes`
---
-ALTER TABLE `clientes`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
 -- AUTO_INCREMENT de la tabla `detallefactura`
 --
 ALTER TABLE `detallefactura`
-  MODIFY `idfacturadetalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idfacturadetalle` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `empresa`
 --
 ALTER TABLE `empresa`
-  MODIFY `idempresa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idempresa` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `factura`
@@ -385,13 +321,13 @@ ALTER TABLE `reservacion`
 -- AUTO_INCREMENT de la tabla `sucursal`
 --
 ALTER TABLE `sucursal`
-  MODIFY `idsucursal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idsucursal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `idusuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `vehiculos`
