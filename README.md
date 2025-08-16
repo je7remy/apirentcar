@@ -1,5 +1,3 @@
----
-
 # API RentCar (PHP + JWT)
 
 API REST para la gestión de un sistema de renta de vehículos: **clientes, empresa, facturación, ingresos, gastos, reparaciones** y autenticación por **JWT**.
@@ -14,17 +12,17 @@ API REST para la gestión de un sistema de renta de vehículos: **clientes, empr
 ## 📁 Estructura (resumen)
 
 ```
-config/           # conexión BD y config general
-login/            # autenticación y emisión de JWT
-clientes/         # CRUD de clientes
-empresa/          # datos de la empresa
-factura/          # facturas
-detallefactura/   # detalle de facturas
-ingresos/         # registros de ingresos
-gastos/           # registros de gastos
-reparaciones/     # historial de reparaciones
-dashboard/        # endpoints de dashboard/resúmenes
-libs/php-jwt-master/  # librería JWT
+config/             # conexión BD y config general
+login/              # autenticación y emisión de JWT
+clientes/           # CRUD de clientes
+empresa/            # datos de la empresa
+factura/            # facturas
+detallefactura/     # detalle de facturas
+ingresos/           # registros de ingresos
+gastos/             # registros de gastos
+reparaciones/       # historial de reparaciones
+dashboard/          # endpoints de dashboard/resúmenes
+libs/php-jwt-master/# librería JWT
 ```
 
 ## ⚙️ Requisitos
@@ -44,7 +42,7 @@ cd apirentcar
 ### 1) Configurar base de datos
 
 * Crea una BD (por ejemplo `rentcar_db`).
-* Importa el esquema SQL si está incluido en el repo (revisa `config/` o un archivo `.sql` en la raíz).
+* Importa el esquema SQL (revisa `config/` o un archivo `.sql` en la raíz).
 * Edita tu archivo de conexión (ej.: `config/database.php` o `config/db.php`) con tus credenciales:
 
 ```php
@@ -65,11 +63,10 @@ class Database {
 }
 ```
 
-
 ### 2) Levantar el servidor
 
 * **Apache/Nginx**: apunta el DocumentRoot al directorio del proyecto.
-* **PHP built-in** (si tu enrutado lo permite):
+* **PHP built-in**
 
   ```bash
   php -S localhost:8000
@@ -85,6 +82,7 @@ class Database {
    Authorization: Bearer <tu_token>
    ```
 
+## 📚 Endpoints
 
 ### Auth
 
@@ -123,7 +121,7 @@ class Database {
 * `PUT /reparaciones/{id}`
 * `DELETE /reparaciones/{id}`
 
-### Dashboard (ejemplo)
+### Dashboard
 
 * `GET /dashboard/resumen` → métricas (totales, últimos movimientos, etc.)
 
@@ -163,13 +161,13 @@ curl -X GET http://localhost:8000/factura \
 ```json
 {
   "success": true,
-  "data": { },
+  "data": {},
   "message": "Operación exitosa",
   "error": null
 }
 ```
 
-## ✅ Buenas prácticas (sugerencias)
+## ✅ Buenas prácticas
 
 * Usar **sentencias preparadas** para SQL.
 * Validar y sanear **input**.
@@ -181,13 +179,7 @@ curl -X GET http://localhost:8000/factura \
 
 Incluye una colección de **Postman/Insomnia** (si la tienes) para facilitar pruebas: `postman_collection.json`.
 
-## 🧾 Licencia
-
-Si no especificas una, considera **MIT** para facilitar forks y contribuciones.
-
 ## 👤 Autor
 
 **Jeremy José de la Cruz (je7remy)** — IT & Cybersecurity
 PRs y sugerencias son bienvenidos.
-
----
